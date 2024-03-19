@@ -5,11 +5,6 @@
 
 #a Range maps, #b temperature niches, #c trait distributions
 
-if(!"remotes" %in% installed.packages()[,"Package"]) install.packages("remotes")
-
-# Install rasterSp from Github if not previously installed
-if(!"rasterSp" %in% installed.packages()[,"Package"]) remotes::install_github("RS-eco/rasterSp", build_vignettes = T)
-
 #Libraries
 library(sf)
 library(ggplot2)
@@ -92,7 +87,7 @@ plantocc_sp<-st_as_sf(plantoccdat,coords=c("decimalLongitude","decimalLatitude")
 plantocc_sp_bt<-st_filter(plantocc_sp,borealtundra)
 dim(plantocc_sp_bt)
 
-ggplot()+geom_sf(data=borealtundra,aes(fill=BIOME))+ scale_fill_manual(labels=c("Boreal forest","Arctic tundra"),"Biome",values=mycols)+
+ggplot()+#geom_sf(data=borealtundra,aes(fill=BIOME))+ scale_fill_manual(labels=c("Boreal forest","Arctic tundra"),"Biome",values=mycols)+
   geom_sf(data=world,fill=NA)+theme_bw()+theme(axis.text.x = element_blank(),axis.text.y = element_blank(),legend.position=c(0.2,0.9))+
   geom_sf(data=plantocc_sp_bt[plantocc_sp_bt$species %in% c("Salix lanata","Salix polaris"),],aes(color=species),alpha=0.5)+
   coord_sf(crs = projchoice,ylim=c(-703086, 7071423),xlim=c(-505347.4, 8526158))
