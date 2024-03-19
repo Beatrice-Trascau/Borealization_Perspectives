@@ -18,8 +18,9 @@ library(tidyterra)
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(tidyverse)
-library(remotes)
-library(rasterSP)
+library(rgbif)
+library(data.table)
+library(geodata)
 
 # #Biome maps -------------------------------------------------------------
 
@@ -75,6 +76,36 @@ ggplot()+#geom_sf(data=borealtundra,aes(fill=BIOME),color=NA)+
 
 
 
-
 #GBIF occurrence data for plants
+#1980-2024(March). >45degN
+#GBIF.org (18 March 2024) GBIF Occurrence Download https://doi.org/10.15468/dl.5zh6uk
+#Direct download
+download.file("https://ntnu.box.com/shared/static/f81im02rb32enak2qsuqk4w6e6waj6tb.csv","Figure3/data/PlantOccRecs.csv")
+#fread to read... 
+plantoccdat<-fread("Figure3/data/PlantOccRecs.csv",header=T)
+dim(plantoccdat)#should be 5 002 413 rows
+head(plantoccdat)
 
+#Make a spatial dataframe using coordinates
+plantocc_sp<-st_as_sf(plantoccdat,coords=c("decimalLongitude","decimalLatitude"),crs=crs(globalbiomes))
+#Filter out coordinates outside of boreal and arctic biomes
+plantocc_sp_bt<-st_filter(plantocc_sp,borealtundra)
+dim(plantocc_sp_bt)
+
+ggplot()+geom_sf(data=borealtundra,aes(fill=BIOME))+ scale_fill_manual(labels=c("Boreal forest","Arctic tundra"),"Biome",values=mycols)+
+  geom_sf(data=world,fill=NA)+theme_bw()+theme(axis.text.x = element_blank(),axis.text.y = element_blank(),legend.position=c(0.2,0.9))+
+  geom_sf(data=plantocc_sp_bt[plantocc_sp_bt$species %in% c("Salix lanata","Salix polaris"),],aes(color=species),alpha=0.5)+
+  coord_sf(crs = projchoice,ylim=c(-703086, 7071423),xlim=c(-505347.4, 8526158))
+ 
+ggplot()+#geom_sf(data=borealtundra,fill=NA,color="black")+
+  geom_sf(data=world,fill=NA)+theme_bw()+theme(axis.text.x = element_blank(),axis.text.y = element_blank(),legend.position=c(0.2,0.9))+
+  geom_sf(data=plantocc_sp_bt[plantocc_sp_bt$species %in% c("Vaccinium myrtillus","Cassiope tetragona"),],aes(color=species),alpha=0.5)+
+  coord_sf(crs = projchoice,ylim=c(-703086, 7071423),xlim=c(-505347.4, 8526158))
+
+
+
+# Temperature niches ------------------------------------------------------
+
+#Download temperature data
+#Worldclim, MAT, MST
+bioclim2.5<-worldclim_global(var='bio',res=2.5,path="Figure3/data")
