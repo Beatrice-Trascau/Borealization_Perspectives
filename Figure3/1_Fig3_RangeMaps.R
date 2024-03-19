@@ -141,4 +141,20 @@ cassiope_vaccinium <-  plantocc_sp |>
 
 ggplot(data=cassiope_vaccinium, aes(x = bio10, group = species, fill = species))+
   geom_density(alpha = .4)+
-  theme_classic()
+  scale_fill_manual(values = mycols, name = "Species")+
+  xlab("Mean Temperature of the Warmest Quarter")+
+  ylab("Density")+
+  theme_classic()+
+  theme(legend.position=c(0.2,0.9))
+
+# Plot frequency for S. lanata and S.polaris
+salix_occ <- plantocc_sp |>
+  filter(species %in% c("Salix lanata","Salix polaris"))
+
+ggplot(data=salix_occ, aes(x = bio10, group = species, fill = species))+
+  geom_density(alpha = .4)+
+  scale_fill_manual(values = mycols, name = "Species")+
+  xlab("Mean Temperature of the Warmest Quarter")+
+  ylab("Density")+
+  theme_classic()+
+  theme(legend.position=c(0.2,0.9))
