@@ -141,7 +141,8 @@ cassiope_vaccinium <-  plantocc_sp |>
 
 ggplot(data=cassiope_vaccinium, aes(x = bio10, group = species, fill = species))+
   geom_density(alpha = .4)+
-  scale_fill_manual(values = mycols, name = "Species")+
+  scale_fill_manual(breaks = c("Vaccinium myrtillus", "Cassiope tetragona"),
+                    values = mycols, name = "Species")+
   xlab("Mean Temperature of the Warmest Quarter")+
   ylab("Density")+
   theme_classic()+
@@ -153,7 +154,8 @@ salix_occ <- plantocc_sp |>
 
 ggplot(data=salix_occ, aes(x = bio10, group = species, fill = species))+
   geom_density(alpha = .4)+
-  scale_fill_manual(values = mycols, name = "Species")+
+  scale_fill_manual(breaks = c("Vaccinium myrtillus", "Cassiope tetragona"),
+                    values = mycols, name = "Species")+
   xlab("Mean Temperature of the Warmest Quarter")+
   ylab("Density")+
   theme_classic()+
