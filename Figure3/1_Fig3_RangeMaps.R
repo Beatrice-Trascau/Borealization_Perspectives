@@ -104,3 +104,33 @@ ggplot()+#geom_sf(data=borealtundra,fill=NA,color="black")+
 #Download temperature data
 #Worldclim, MAT, MST
 bioclim2.5<-worldclim_global(var='bio',res=2.5,path="Figure3/data")
+
+#Annual Mean Temperature
+bio10 <- bioclim2.5$wc2.1_2.5m_bio_10
+crs(bio10, proj = TRUE) #+proj=longlat +datum=WGS84 +no_defs
+crs(plantocc_sp_bt, proj = TRUE) #+proj=longlat +datum=WGS84 +no_defs
+
+# Crop bioclims to >45 degrees N and reproject to polat projection
+#define new extent
+new_extent <- c(-180, 180, 45, 90)
+#crop bioclimatic rasters
+bio10_cropped <- crop(bio10, new_extent)
+#reproject to polar
+bio10_cropped_polar <- project(bio10_cropped, crs(projchoice))
+
+# Plot Mean Temperature of the Warmest Quarter
+ggplot() +
+  geom_sf(data=world,fill=NA)+
+  theme(axis.text.x = element_blank(),axis.text.y = element_blank(),
+        legend.position=c(0.2,0.9))+
+  geom_tile(data = bio10_cropped_polar, 
+            aes(x = x, y = y, fill = wc2.1_2.5m_bio_10)) +
+  coord_sf(crs = projchoice,ylim=c(-703086, 7071423),xlim=c(-505347.4, 8526158))
+
+# Extract temperature values for occurrences
+#convert plant occurrences to SpatVector
+plantocc_vect <- vect(plantocc_sp)
+#extract raster values
+temp_occurrences <- extract(bio10_cropped, plantocc_sp)
+#add extracted values to spatial dataframe
+plantocc_sp$bio10 <- temp_occurrences[,1]
