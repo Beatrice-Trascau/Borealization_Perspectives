@@ -136,10 +136,9 @@ temp_occurrences <- terra::extract(bio10_cropped, plantocc_vect)
 plantocc_sp$bio10 <- temp_occurrences[,2]
 
 # Plot frequency for C. tetragona & V. myrtillus
-cassiope_vaccinium <-  plantocc_sp |>
-  filter(species %in% c("Vaccinium myrtillus","Cassiope tetragona"))
-
-ggplot(data=cassiope_vaccinium, aes(x = bio10, group = species, fill = species))+
+plantocc_sp |>
+  filter(species %in% c("Vaccinium myrtillus","Cassiope tetragona")) |>
+  ggplot(aes(x = bio10, group = species, fill = species))+
   geom_density(alpha = .4)+
   scale_fill_manual(breaks = c("Vaccinium myrtillus", "Cassiope tetragona"),
                     values = mycols, name = "Species")+
@@ -149,13 +148,11 @@ ggplot(data=cassiope_vaccinium, aes(x = bio10, group = species, fill = species))
   theme(legend.position=c(0.2,0.9))
 
 # Plot frequency for S. lanata and S.polaris
-salix_occ <- plantocc_sp |>
-  filter(species %in% c("Salix lanata","Salix polaris"))
-
-ggplot(data=salix_occ, aes(x = bio10, group = species, fill = species))+
+plantocc_sp |>
+  filter(species %in% c("Salix lanata","Salix polaris")) |>
+  ggplot(aes(x = bio10, group = species, fill = species))+
   geom_density(alpha = .4)+
-  scale_fill_manual(breaks = c("Vaccinium myrtillus", "Cassiope tetragona"),
-                    values = mycols, name = "Species")+
+  scale_fill_manual(values = mycols, name = "Species")+
   xlab("Mean Temperature of the Warmest Quarter")+
   ylab("Density")+
   theme_classic()+
