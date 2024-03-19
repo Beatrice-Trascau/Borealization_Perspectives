@@ -131,6 +131,14 @@ ggplot() +
 #convert plant occurrences to SpatVector
 plantocc_vect <- vect(plantocc_sp)
 #extract raster values
-temp_occurrences <- extract(bio10_cropped, plantocc_sp)
+temp_occurrences <- terra::extract(bio10_cropped, plantocc_vect)
 #add extracted values to spatial dataframe
-plantocc_sp$bio10 <- temp_occurrences[,1]
+plantocc_sp$bio10 <- temp_occurrences[,2]
+
+# Plot frequency for C. tetragona & V. myrtillus
+cassiope_vaccinium <-  plantocc_sp |>
+  filter(species %in% c("Vaccinium myrtillus","Cassiope tetragona"))
+
+ggplot(data=cassiope_vaccinium, aes(x = bio10, group = species, fill = species))+
+  geom_density(alpha = .4)+
+  theme_classic()
