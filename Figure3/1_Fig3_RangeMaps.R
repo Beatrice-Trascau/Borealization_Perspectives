@@ -175,6 +175,18 @@ plantocc_sp |>
   theme_classic()+
   theme(legend.position=c(0.2,0.9))
 
-# Traits          ------------------------------------------------------
+# Traits ------------------------------------------------------
 
 # Read in trait data
+traits <- read_delim("Figure3/data/planttraitdata - Copy.csv",
+                     delim = ";", col_names = TRUE, col_types = cols(
+                       number = col_double(),
+                       sp = col_character(),
+                       Dataset = col_character(),
+                       TraitValue = col_double(),
+                       Lat = col_double(),
+                       Lon = col_double(),
+                       DataContributor = col_character(),
+                       TraitName = col_character()))
+
+# Read in data and split columns after
