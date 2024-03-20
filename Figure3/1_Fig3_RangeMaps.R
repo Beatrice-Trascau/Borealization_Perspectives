@@ -269,5 +269,6 @@ traits_clean_fix_4 <- traits_clean_fix_3 |>
   mutate(sp = str_replace_all(sp, fixed("\""), ""),
          TraitNameClean = str_replace_all(TraitNameClean, "[\";]+", ""))
 
-
-
+# Save new plant trait df
+write.csv(traits_clean_fix_4,
+          "Figure3/data/cleaned_planttraitdata.csv")
