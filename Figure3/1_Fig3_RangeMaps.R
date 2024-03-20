@@ -149,7 +149,8 @@ plantocc_sp$bio10 <- temp_ID_occurrences[,2]
 plantocc_sp$cell_ID <- temp_ID_occurrences[,3]
 
 #keep unique rows for species and cell_ID
-unique_plantocc_sp <- distinct(plantocc_sp, species, cell_ID)
+unique_plantocc_sp <- distinct(plantocc_sp, species, cell_ID,
+                               .keep_all = TRUE)
 
 # Plot frequency for C. tetragona & V. myrtillus
 unique_plantocc_sp |>
@@ -174,4 +175,6 @@ plantocc_sp |>
   theme_classic()+
   theme(legend.position=c(0.2,0.9))
 
+# Traits          ------------------------------------------------------
 
+# Read in trait data
