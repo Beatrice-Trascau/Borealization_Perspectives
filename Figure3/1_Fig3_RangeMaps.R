@@ -106,7 +106,7 @@ ggplot()+#geom_sf(data=borealtundra,fill=NA,color="black")+
 #Worldclim, MAT, MST
 bioclim2.5<-worldclim_global(var='bio',res=2.5,path="Figure3/data")
 
-#Annual Mean Temperature
+#Mean Temperature of the Warmest Quarter
 bio10 <- bioclim2.5$wc2.1_2.5m_bio_10
 crs(bio10, proj = TRUE) #+proj=longlat +datum=WGS84 +no_defs
 crs(plantocc_sp_bt, proj = TRUE) #+proj=longlat +datum=WGS84 +no_defs
@@ -124,16 +124,35 @@ ggplot() +
   geom_sf(data=world,fill=NA)+
   coord_sf(crs = projchoice,ylim=c(-703086, 7071423),xlim=c(-505347.4, 8526158))
 
-# Extract temperature values for occurrences
+## Extract temperature values for occurrences
 #convert plant occurrences to SpatVector
 plantocc_vect <- vect(plantocc_sp)
+
+#create additional layer with unique ID cells
+ID_raster <- bio10
+values(ID_raster) <- 1:ncell(bio10)
+
+#combine ID raster with bio10 raster
+bio10_IDs <- c(bio10, ID_raster)
+
+#change layer names
+names(bio10_IDs) <- c("bio10", "cell_ID")
+
+#check combined raster
+print(bio10_IDs)
+
 #extract raster values
-temp_occurrences <- terra::extract(bio10_cropped, plantocc_vect)
+temp_ID_occurrences <- terra::extract(bio10_IDs, plantocc_vect)
+
 #add extracted values to spatial dataframe
-plantocc_sp$bio10 <- temp_occurrences[,2]
+plantocc_sp$bio10 <- temp_ID_occurrences[,2]
+plantocc_sp$cell_ID <- temp_ID_occurrences[,3]
+
+#keep unique rows for species and cell_ID
+unique_plantocc_sp <- distinct(plantocc_sp, species, cell_ID)
 
 # Plot frequency for C. tetragona & V. myrtillus
-plantocc_sp |>
+unique_plantocc_sp |>
   filter(species %in% c("Vaccinium myrtillus","Cassiope tetragona")) |>
   ggplot(aes(x = bio10, group = species, fill = species))+
   geom_density(alpha = .4)+
