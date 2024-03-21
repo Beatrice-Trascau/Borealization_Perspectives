@@ -176,99 +176,109 @@ plantocc_sp |>
   theme(legend.position=c(0.2,0.9))
 
 # Traits ------------------------------------------------------
+# 
+# # Read in data
+# traits <- read.csv("Figure3/data/planttraitdata.csv",
+#                    header = FALSE)
+# 
+# # Split columns
+# traits_clean <- traits |>
+#   separate(col = V1, 
+#            into = c("number", "sp", "Dataset", "TraitValue", "Lat", "Lon",
+#                     "DataContributor", "TraitName", "extra", "extra2"), 
+#            sep = ",", convert = TRUE, extra = "warn")
+# 
+# # Remove first row - it is redundant
+# traits_clean <- traits_clean |>
+#   slice(-1)
+# 
+# # Inspect df
+# str(traits_clean)
+# glimpse(traits_clean) #TraitValue has both numbers and Names
+# levels(as.factor(traits_clean$TraitValue)) #" Alaska\"", " Finland\"", " Leaf N and P", " Plant Height Database\"" - non-numeric values in the columns
+# 
+# # Copy Trait data column and reorder columns
+# traits_clean_fix <- traits_clean |>
+#   mutate(TraitValueClean = TraitValue) |>
+#   select(1:4, 11, 5:10)
+# 
+# # Convert values to NA when they have the above value for TraitValue column
+# traits_clean_fix <- traits_clean_fix |>
+#   mutate(TraitValueClean = case_when(
+#     str_detect(TraitValueClean, "a") ~ NA, 
+#     TRUE ~ TraitValueClean
+#   ))
+# 
+# # Check which rows have NA values for TraitsValueClean
+# glimpse(traits_clean_fix)
+# na_rows <- which(is.na(traits_clean_fix$TraitValueClean))
+# 
+# # Shift values in columns 6 to 11 one column to the left
+# for(row in na_rows){
+#   traits_clean_fix[row, 5:10] <- traits_clean_fix[row, 6:11]
+# }
+# 
+# # Inspect df again
+# glimpse(traits_clean_fix) #TraitValue has both numbers and Names
+# levels(as.factor(traits_clean$TraitName)) #contributor names in the trait name column
+# 
+# # Copy contributor name column and reorder columns
+# traits_clean_fix_2 <- traits_clean_fix |>
+#   mutate(TraitNameClean = TraitName) |>
+#   select(1:9, 12, 10:11)
+# 
+# # Convert values to NA when they have the above value for TraitName column
+# traits_clean_fix_2 <- traits_clean_fix_2 |>
+#   mutate(TraitNameClean = case_when(
+#     str_detect(TraitNameClean, "SLA|PlantHeight|SeedMass") ~ TraitNameClean, 
+#     TRUE ~ NA
+#   ))
+# 
+# # Check which rows have NA values for TraitsValueClean
+# glimpse(traits_clean_fix_2)
+# na_rows_trait_name <- which(is.na(traits_clean_fix_2$TraitNameClean))
+# 
+# # Shift values in columns 6 to 10 one column to the left
+# for(row in na_rows_trait_name){
+#   traits_clean_fix_2[row, 10] <- traits_clean_fix_2[row, 11]
+# }
+# 
+# # Check values in column "Traits Value Clean"
+# levels(as.factor(traits_clean_fix_2$TraitNameClean)) #still some contributor names
+# 
+# # Convert values to NA when they have the above value for TraitName column
+# traits_clean_fix_3 <- traits_clean_fix_2 |>
+#   mutate(TraitNameClean = str_replace_all(TraitNameClean, "[\";]+", "")) |>
+#   mutate(TraitNameClean = case_when(
+#     str_detect(TraitNameClean, "SLA|PlantHeight|SeedMass") ~ TraitNameClean, 
+#     TRUE ~ NA
+#   ))
+# 
+# # Check which rows have NA values for TraitsValueClean
+# glimpse(traits_clean_fix_3)
+# na_rows_trait_name <- which(is.na(traits_clean_fix_3$TraitNameClean))
+# 
+# 
+# # Shift values in columns 12 to column 10
+# for(row in na_rows_trait_name){
+#   traits_clean_fix_3[row, 10] <- traits_clean_fix_3[row, 12]
+# }
+# 
+# # Remove "" from spm and trait name
+# traits_clean_fix_4 <- traits_clean_fix_3 |>
+#   mutate(sp = str_replace_all(sp, fixed("\""), ""),
+#          TraitNameClean = str_replace_all(TraitNameClean, "[\";]+", ""))
+# 
+# # Save new plant trait df
+# write.csv(traits_clean_fix_4,
+#           "Figure3/data/cleaned_planttraitdata.csv")
+# 
 
 # Read in data
-traits <- read.csv("Figure3/data/planttraitdata.csv",
-                   header = FALSE)
+traits1 <- read.csv("Figure3/data/traits_for_james_fromxl.csv",
+                   header = TRUE,sep=";",dec=',')
 
-# Split columns
-traits_clean <- traits |>
-  separate(col = V1, 
-           into = c("number", "sp", "Dataset", "TraitValue", "Lat", "Lon",
-                    "DataContributor", "TraitName", "extra", "extra2"), 
-           sep = ",", convert = TRUE, extra = "warn")
-
-# Remove first row - it is redundant
-traits_clean <- traits_clean |>
-  slice(-1)
-
-# Inspect df
-str(traits_clean)
-glimpse(traits_clean) #TraitValue has both numbers and Names
-levels(as.factor(traits_clean$TraitValue)) #" Alaska\"", " Finland\"", " Leaf N and P", " Plant Height Database\"" - non-numeric values in the columns
-
-# Copy Trait data column and reorder columns
-traits_clean_fix <- traits_clean |>
-  mutate(TraitValueClean = TraitValue) |>
-  select(1:4, 11, 5:10)
-
-# Convert values to NA when they have the above value for TraitValue column
-traits_clean_fix <- traits_clean_fix |>
-  mutate(TraitValueClean = case_when(
-    str_detect(TraitValueClean, "a") ~ NA, 
-    TRUE ~ TraitValueClean
-  ))
-
-# Check which rows have NA values for TraitsValueClean
-glimpse(traits_clean_fix)
-na_rows <- which(is.na(traits_clean_fix$TraitValueClean))
-
-# Shift values in columns 6 to 11 one column to the left
-for(row in na_rows){
-  traits_clean_fix[row, 5:10] <- traits_clean_fix[row, 6:11]
-}
-
-# Inspect df again
-glimpse(traits_clean_fix) #TraitValue has both numbers and Names
-levels(as.factor(traits_clean$TraitName)) #contributor names in the trait name column
-
-# Copy contributor name column and reorder columns
-traits_clean_fix_2 <- traits_clean_fix |>
-  mutate(TraitNameClean = TraitName) |>
-  select(1:9, 12, 10:11)
-
-# Convert values to NA when they have the above value for TraitName column
-traits_clean_fix_2 <- traits_clean_fix_2 |>
-  mutate(TraitNameClean = case_when(
-    str_detect(TraitNameClean, "SLA|PlantHeight|SeedMass") ~ TraitNameClean, 
-    TRUE ~ NA
-  ))
-
-# Check which rows have NA values for TraitsValueClean
-glimpse(traits_clean_fix_2)
-na_rows_trait_name <- which(is.na(traits_clean_fix_2$TraitNameClean))
-
-# Shift values in columns 6 to 10 one column to the left
-for(row in na_rows_trait_name){
-  traits_clean_fix_2[row, 10] <- traits_clean_fix_2[row, 11]
-}
-
-# Check values in column "Traits Value Clean"
-levels(as.factor(traits_clean_fix_2$TraitNameClean)) #still some contributor names
-
-# Convert values to NA when they have the above value for TraitName column
-traits_clean_fix_3 <- traits_clean_fix_2 |>
-  mutate(TraitNameClean = str_replace_all(TraitNameClean, "[\";]+", "")) |>
-  mutate(TraitNameClean = case_when(
-    str_detect(TraitNameClean, "SLA|PlantHeight|SeedMass") ~ TraitNameClean, 
-    TRUE ~ NA
-  ))
-
-# Check which rows have NA values for TraitsValueClean
-glimpse(traits_clean_fix_3)
-na_rows_trait_name <- which(is.na(traits_clean_fix_3$TraitNameClean))
-
-
-# Shift values in columns 12 to column 10
-for(row in na_rows_trait_name){
-  traits_clean_fix_3[row, 10] <- traits_clean_fix_3[row, 12]
-}
-
-# Remove "" from spm and trait name
-traits_clean_fix_4 <- traits_clean_fix_3 |>
-  mutate(sp = str_replace_all(sp, fixed("\""), ""),
-         TraitNameClean = str_replace_all(TraitNameClean, "[\";]+", ""))
-
-# Save new plant trait df
-write.csv(traits_clean_fix_4,
-          "Figure3/data/cleaned_planttraitdata.csv")
+ggplot(data=traits1[traits1$TraitName=="PlantHeight" & traits1$sp %in% c("Salix lanata","Salix polaris"),], aes(x =TraitValue, fill = sp))+
+  geom_density(alpha = .4)+theme_bw()+xlab("Height")
+ggplot(data=traits1[traits1$TraitName=="SLA" & traits1$sp %in% c("Vaccinium myrtillus","Cassiope tetragona"),], aes(x =TraitValue, fill = sp))+
+  geom_density(alpha = .4)+theme_bw()+xlab("SLA")
