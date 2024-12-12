@@ -168,7 +168,7 @@ CV_temp<-unique_plantocc_sp |>
   geom_density(alpha = .4)+
   scale_fill_manual(breaks = c("Vaccinium myrtillus", "Cassiope tetragona"),
                     values = mycols, name = "Species")+
-  xlab("Mean Temperature of the Warmest Quarter")+
+  xlab(expression("Mean Temperature of the Warmest Quarter "~(degree*C)))+
   ylab("Density")+
   theme_classic()+
   labs(tag="c")+
@@ -180,7 +180,7 @@ SS_temp<-unique_plantocc_sp |>
   ggplot(aes(x = bio10, group = species, fill = species))+
   geom_density(alpha = .4)+
   scale_fill_manual(values = mycols, name = "Species")+
-  xlab("Mean Temperature of the Warmest Quarter")+
+  xlab(expression("Mean Temperature of the Warmest Quarter "~(degree*C)))+
   ylab("Density")+
   theme_classic()+
   labs(tag="d")+
@@ -301,17 +301,17 @@ traits1 <- read.csv("Figure3/data/traits_for_james_fromxl.csv",
 SS_trait<-ggplot(data=traits1[traits1$TraitName=="PlantHeight" & traits1$sp %in% c("Salix polaris","Salix lanata"),], aes(x =TraitValue, fill = sp))+
   geom_density(alpha = .4)+
   theme_classic()+
-  xlab("Height")+ylab("Density")+
-    theme(legend.position = 'none')+
+  xlab("Height (m)")+ylab("Density")+
+  theme(legend.position = 'none')+
   labs(tag="f")+
   scale_fill_manual("Species",values=c("Salix polaris" =mycols[2],
                                       "Salix lanata" = mycols[1]))+
-  scale_x_continuous(trans='log2')
+  scale_x_continuous(trans='log10')
   
 CV_trait<-ggplot(data=traits1[traits1$TraitName=="SLA" & traits1$sp %in% c("Cassiope tetragona","Vaccinium myrtillus"),], aes(x =TraitValue, fill = sp))+
   geom_density(alpha = .4)+
   theme_classic()+
-  xlab("SLA")+ylab("Density")+
+  xlab(expression("SLA"~(mm^2~mg^-1)))+ylab("Density")+
   theme(legend.position = 'none')+
   labs(tag="e")+
   scale_fill_manual("Species", values=c("Cassiope tetragona" =mycols[2],
