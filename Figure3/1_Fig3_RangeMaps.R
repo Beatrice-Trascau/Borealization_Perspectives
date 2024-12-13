@@ -91,7 +91,7 @@ dim(plantocc_sp_bt)
 
 SS_map<-ggplot()+#geom_sf(data=borealtundra,aes(fill=BIOME))+ scale_fill_manual(labels=c("Boreal forest","Arctic tundra"),"Biome",values=mycols)+
   geom_sf(data=world,fill=NA)+theme_bw()+theme(axis.text.x = element_blank(),axis.text.y = element_blank(),legend.position=c(0.2,0.9))+
-  geom_sf(data=plantocc_sp_bt[plantocc_sp_bt$species %in% c("Salix lanata","Salix polaris"),],aes(color=species),alpha=0.5)+
+  geom_sf(data=plantocc_sp_bt[plantocc_sp_bt$species %in% c("Salix lanata","Salix polaris"),],aes(color=species),alpha=0.5,cex=0.5)+
   scale_color_manual(values=c("Salix polaris" =mycols[2],
                               "Salix lanata" = mycols[1]))+
   theme(legend.position = 'none')+
@@ -100,7 +100,7 @@ SS_map<-ggplot()+#geom_sf(data=borealtundra,aes(fill=BIOME))+ scale_fill_manual(
  
 CV_map<-ggplot()+#geom_sf(data=borealtundra,fill=NA,color="black")+
   geom_sf(data=world,fill=NA)+theme_bw()+theme(axis.text.x = element_blank(),axis.text.y = element_blank(),legend.position=c(0.2,0.9))+
-  geom_sf(data=plantocc_sp_bt[plantocc_sp_bt$species %in% c("Vaccinium myrtillus","Cassiope tetragona"),],aes(color=species),alpha=0.5)+
+  geom_sf(data=plantocc_sp_bt[plantocc_sp_bt$species %in% c("Vaccinium myrtillus","Cassiope tetragona"),],aes(color=species),alpha=0.5,cex=0.5)+
   scale_color_manual(values=c("Cassiope tetragona" =mycols[2],
                               "Vaccinium myrtillus" = mycols[1]))+
   theme(legend.position = 'none')+
@@ -172,7 +172,7 @@ CV_temp<-unique_plantocc_sp |>
   ylab("Density")+
   theme_classic()+
   labs(tag="c")+
-  theme(legend.position=c(0.2,0.9))
+  theme(legend.position = 'none')
 
 # Plot frequency for S. lanata and S.polaris
 SS_temp<-unique_plantocc_sp |>
@@ -184,8 +184,8 @@ SS_temp<-unique_plantocc_sp |>
   ylab("Density")+
   theme_classic()+
   labs(tag="d")+
-  theme(legend.position=c(0.2,0.9))
-
+  theme(legend.position = 'none')
+  
 # Traits ------------------------------------------------------
 
 
@@ -302,7 +302,7 @@ SS_trait<-ggplot(data=traits1[traits1$TraitName=="PlantHeight" & traits1$sp %in%
   geom_density(alpha = .4)+
   theme_classic()+
   xlab("Height (m)")+ylab("Density")+
-  theme(legend.position = 'none')+
+  theme(legend.position=c(0.2,0.9))+
   labs(tag="f")+
   scale_fill_manual("Species",values=c("Salix polaris" =mycols[2],
                                       "Salix lanata" = mycols[1]))+
@@ -312,7 +312,7 @@ CV_trait<-ggplot(data=traits1[traits1$TraitName=="SLA" & traits1$sp %in% c("Cass
   geom_density(alpha = .4)+
   theme_classic()+
   xlab(expression("SLA"~(mm^2~mg^-1)))+ylab("Density")+
-  theme(legend.position = 'none')+
+  theme(legend.position=c(0.2,0.9))+
   labs(tag="e")+
   scale_fill_manual("Species", values=c("Cassiope tetragona" =mycols[2],
                                       "Vaccinium myrtillus" = mycols[1]))
@@ -320,4 +320,4 @@ CV_trait<-ggplot(data=traits1[traits1$TraitName=="SLA" & traits1$sp %in% c("Cass
 
 #Plant species only fig
 arrange1<-grid.arrange(CV_map,SS_map,CV_temp,SS_temp,CV_trait,SS_trait,ncol=2)
-ggsave("Figure3/BorealizationFig.png",arrange1,width=6,height=10,units="in")
+ggsave("Figure3/BorealizationFig.png",arrange1,width=8,height=12,units="in")
