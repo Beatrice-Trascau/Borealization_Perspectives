@@ -18,6 +18,7 @@ library(rgbif)
 library(data.table)
 library(geodata)
 library(gridExtra)
+library(cowplot)
 
 # #Biome maps -------------------------------------------------------------
 
@@ -76,11 +77,11 @@ ggplot()+#geom_sf(data=borealtundra,aes(fill=BIOME),color=NA)+
 #GBIF occurrence data for plants
 #1980-2024(March). >45degN
 #GBIF.org (18 March 2024) GBIF Occurrence Download https://doi.org/10.15468/dl.5zh6uk
+#Download key = 0027119-240314170635999
 #Direct download
-download.file("https://ntnu.box.com/shared/static/f81im02rb32enak2qsuqk4w6e6waj6tb.csv","Figure3/data/PlantOccRecs.csv")
-#fread to read... 
-plantoccdat<-fread("Figure3/data/PlantOccRecs.csv",header=T)
-dim(plantoccdat)#should be 5 002 413 rows
+plantoccdat <- occ_download_get("0027119-240314170635999") %>%
+  occ_download_import()
+dim(plantoccdat)#should be 502 413 rows
 head(plantoccdat)
 
 #Make a spatial dataframe using coordinates
@@ -172,7 +173,7 @@ CV_temp<-unique_plantocc_sp |>
   ylab("Density")+
   theme_classic()+
   labs(tag="c")+
-  theme(legend.position=c(0.2,0.9))
+  theme(legend.position=c(0.25,0.9))
 
 # Plot frequency for S. lanata and S.polaris
 SS_temp<-unique_plantocc_sp |>
@@ -319,5 +320,7 @@ CV_trait<-ggplot(data=traits1[traits1$TraitName=="SLA" & traits1$sp %in% c("Cass
 
 
 #Plant species only fig
-arrange1<-grid.arrange(CV_map,SS_map,CV_temp,SS_temp,CV_trait,SS_trait,ncol=2)
-ggsave("Figure3/BorealizationFig.png",arrange1,width=6,height=10,units="in")
+final_plot <- plot_grid(CV_map + theme(aspect.ratio = 0.8),SS_map + theme(aspect.ratio = 0.8),
+  CV_temp, SS_temp,CV_trait, SS_trait,
+  ncol = 2,align = "hv",rel_heights = c(1, 1, 1))
+ggsave("Figure3/BorealizationFig.png", plot = final_plot, width = 8, height = 12, units = "in", dpi = 300)
