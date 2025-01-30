@@ -77,7 +77,7 @@ ggplot()+#geom_sf(data=borealtundra,aes(fill=BIOME),color=NA)+
 #1980-2024(March). >45degN
 #GBIF.org (18 March 2024) GBIF Occurrence Download https://doi.org/10.15468/dl.5zh6uk
 #Direct download
-download.file("https://ntnu.box.com/shared/static/f81im02rb32enak2qsuqk4w6e6waj6tb.csv","Figure3/data/PlantOccRecs.csv")
+#download.file("https://ntnu.box.com/shared/static/f81im02rb32enak2qsuqk4w6e6waj6tb.csv","Figure3/data/PlantOccRecs.csv")
 #fread to read... 
 plantoccdat<-fread("Figure3/data/PlantOccRecs.csv",header=T)
 dim(plantoccdat)#should be 5 002 413 rows
@@ -168,9 +168,10 @@ CV_temp<-unique_plantocc_sp |>
   geom_density(alpha = .4)+
   scale_fill_manual(breaks = c("Vaccinium myrtillus", "Cassiope tetragona"),
                     values = mycols, name = "Species")+
-  xlab(expression("Mean Temperature of the Warmest Quarter "~(degree*C)))+
+  xlab(expression("Mean temp. warmest quarter "~(degree*C)))+
   ylab("Density")+
   theme_classic()+
+  theme(axis.title = element_text(size=14),axis.text=element_text(size=12))+
   labs(tag="c")+
   theme(legend.position = 'none')
 
@@ -180,9 +181,10 @@ SS_temp<-unique_plantocc_sp |>
   ggplot(aes(x = bio10, group = species, fill = species))+
   geom_density(alpha = .4)+
   scale_fill_manual(values = mycols, name = "Species")+
-  xlab(expression("Mean Temperature of the Warmest Quarter "~(degree*C)))+
+  xlab(expression("Mean temp. warmest quarter "~(degree*C)))+
   ylab("Density")+
   theme_classic()+
+  theme(axis.title = element_text(size=14),axis.text=element_text(size=12))+
   labs(tag="d")+
   theme(legend.position = 'none')
   
@@ -297,12 +299,16 @@ SS_temp<-unique_plantocc_sp |>
 # Read in data
 traits1 <- read.csv("Figure3/data/traits_for_james_fromxl.csv",
                    header = TRUE,sep=";",dec=',')
+traits1$sp<-factor(traits1$sp,levels=c("Cassiope tetragona","Vaccinium myrtillus","Salix polaris","Salix lanata"))
+
 
 SS_trait<-ggplot(data=traits1[traits1$TraitName=="PlantHeight" & traits1$sp %in% c("Salix polaris","Salix lanata"),], aes(x =TraitValue, fill = sp))+
   geom_density(alpha = .4)+
   theme_classic()+
   xlab("Height (m)")+ylab("Density")+
-  theme(legend.position=c(0.2,0.9))+
+  theme(legend.position=c(0.7,0.9),legend.text=element_text(size=12),legend.title=element_text(size=12),
+        axis.title = element_text(size=14),axis.text=element_text(size=12))+
+  
   labs(tag="f")+
   scale_fill_manual("Species",values=c("Salix polaris" =mycols[2],
                                       "Salix lanata" = mycols[1]))+
@@ -310,14 +316,17 @@ SS_trait<-ggplot(data=traits1[traits1$TraitName=="PlantHeight" & traits1$sp %in%
   
 CV_trait<-ggplot(data=traits1[traits1$TraitName=="SLA" & traits1$sp %in% c("Cassiope tetragona","Vaccinium myrtillus"),], aes(x =TraitValue, fill = sp))+
   geom_density(alpha = .4)+
-  theme_classic()+
+  theme_classic()+scale_y_continuous(limits=c(0,0.15))+
   xlab(expression("SLA"~(mm^2~mg^-1)))+ylab("Density")+
-  theme(legend.position=c(0.2,0.9))+
+  theme(legend.position=c(0.7,0.9),legend.text=element_text(size=12),legend.title=element_text(size=12),
+        axis.title = element_text(size=14),axis.text=element_text(size=12))+
   labs(tag="e")+
   scale_fill_manual("Species", values=c("Cassiope tetragona" =mycols[2],
                                       "Vaccinium myrtillus" = mycols[1]))
+                  
 
 
 #Plant species only fig
 arrange1<-grid.arrange(CV_map,SS_map,CV_temp,SS_temp,CV_trait,SS_trait,ncol=2)
+arrange1
 ggsave("Figure3/BorealizationFig.png",arrange1,width=8,height=12,units="in")
