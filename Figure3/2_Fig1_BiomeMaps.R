@@ -43,7 +43,7 @@ boreal_forest_polar <- st_transform(boreal_forest, crs = proj_choice)
 tundra_polar <- st_transform(tundra, crs = proj_choice)
 
 # Define custom colors for biomes
-mycols <- c("#BBC4AC", "#E3CF9D")
+mycols <- c("darkolivegreen", "darkgoldenrod")
 
 # Combine the boreal and tundra data for the legend
 biome_data <- rbind(cbind(st_drop_geometry(data.frame(BIOME = 6)), 
