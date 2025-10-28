@@ -66,16 +66,15 @@ biome_data <- rbind(cbind(st_drop_geometry(data.frame(BIOME = 6)),
     theme_bw() +
     theme(axis.text.x = element_blank(),
           axis.text.y = element_blank(),
-          legend.position = c(0.2, 0.1),
-          legend.text = element_text(size = 16),
-          legend.title = element_text(size = 18),
+          legend.position = c(0.25, 0.1),
+          legend.text = element_text(size = 24),
+          legend.title = element_blank(),
           plot.title = element_text(face = "bold", size = 16),
           panel.grid.major = element_line(color = "gray90", linetype = "dashed"),
           panel.grid.minor = element_blank()) +
     # add custom colours and legend values
     scale_fill_manual(values = mycols,
-                      labels = c("Boreal Forest Biome", "Tundra Biome"),
-                      name = "Biome") +
+                      labels = c("Boreal Forest Biome", "Tundra Biome")) +
     # add point legend
     guides(fill = guide_legend(title = "Biome")))
 
